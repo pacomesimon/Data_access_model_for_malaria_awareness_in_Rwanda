@@ -1,0 +1,12 @@
+# Dependency directories
+
+
+# Optional  cache directory
+.ipynb_checkpoints
+__pycache__
+
+# dotenv environment variables file
+.env
+
+# draft files and folders
+draft.ipynb
