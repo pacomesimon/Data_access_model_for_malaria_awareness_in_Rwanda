@@ -87,8 +87,25 @@ def create_resource(resource_table_name,details_dict):
         new_resource = Blood_test(**details_dict)
     elif resource_table_name=="malaria_results":
         new_resource = Malaria_results(**details_dict)
+        db.session.add(new_resource)
+        db.session.commit()
+        patient_id = Blood_test.query.filter_by(id=details_dict["id"]).first().patient_id
+        current_patient =Patient.query.filter_by(id=patient_id).first()
+        case_cache_dict = {
+            "id": details_dict["id"],
+            "date": details_dict["date"],
+            "patient_id": patient_id,
+            "Name": current_patient.name,
+            "date_of_birth": current_patient.date_of_birth,
+            "gender": current_patient.gender,
+            "village_id": current_patient.village_id,
+            "malaria_status": details_dict["malaria_status"],
+            "parasite_type": details_dict["parasite_type"],
+            "blood_test_id": details_dict["id"],
+        }
+        new_resource = Case_cache(**case_cache_dict)   
     elif resource_table_name=="case_cache":
-        new_resource = Case_cache(**details_dict)
+        new_resource = Case_cache(**details_dict)  
     else:
         return "Resource's table not found"
     
@@ -104,6 +121,8 @@ def update_resource(resource_table_name,id,details_dict):
         resource = Blood_test.query.filter_by(id=id).first()
     elif resource_table_name=="malaria_results":
         resource = Malaria_results.query.filter_by(id=id).first()
+        [setattr(resource,attr,val) for attr,val in details_dict.items()]
+        resource = Case_cache.query.filter_by(id=id).first()
     elif resource_table_name=="case_cache":
         resource = Case_cache.query.filter_by(id=id).first()
     else:

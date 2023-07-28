@@ -10,11 +10,11 @@ if (cfg["APP_ENVIRONMENT"] == "DEVELOPMENT"):
     datasets_folder_location = "datasets/"
     csv_filenames=["provinces","districts","sectors",
                 "cells","villages","health_centers",
-                "patients","blood_tests","malaria_results"
+                "patients","blood_tests","malaria_results","users"
                 ]
     for i in csv_filenames:
         df = pd.read_csv(datasets_folder_location + i +".csv")
-        df=df.dropna()
+        # df=df.dropna()
         if i == "malaria_results":
             df.to_sql(con=db.engine, name=i, if_exists='append', index=False)
         else:

@@ -1,0 +1,9 @@
+id,name,country,institution,position,national_id,phone,email,password,role,health_center_id
+0,FRANK,Ghana,CMU,TA,12341241,325523,1000@gmail.com,qwert2000,sys_admin,
+1,LILY,Rwanda,RBC,Doctor,4563546,25425,1001@gmail.com,qwert2001,health_worker,34
+2,BILLY,Kenya,BCC,Journalist,457465767,243552,1002@gmail.com,qwert2002,researcher,
+3,CATHY,Sudan,CSBR,Teacher,235345235,23525,1003@gmail.com,qwert2003,sys_admin,
+4,SAM,Libya,LBC,Minister,425235232,253252,1004@gmail.com,qwert2004,researcher,
+5,GILLY,India,IDSCS,Teacher,23453544,235235,1005@gmail.com,qwert2005,researcher,
+6,JAVA,Mexico,MRTU,Journalist,345352,234525,1006@gmail.com,qwert2006,researcher,
+7,RICE,France,ISRP,Student,3524523,2452454,1007@gmail.com,qwert2007,researcher,

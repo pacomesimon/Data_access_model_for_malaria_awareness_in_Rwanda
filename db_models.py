@@ -79,4 +79,17 @@ class Case_cache(db.Model):
     parasite_type = db.Column(db.String(200))
     blood_test_id = db.Column(db.Integer, db.ForeignKey('blood_test.id'))
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200))
+    country = db.Column(db.String(200))
+    institution = db.Column(db.String(200))
+    position = db.Column(db.String(200))
+    national_id = db.Column(db.String(200))
+    phone = db.Column(db.String(200))
+    email = db.Column(db.String(200))
+    password = db.Column(db.String(200))
+    role = db.Column(db.String(200))
+    health_center_id = db.Column(db.Integer, db.ForeignKey('health_center.id'))
+
 
