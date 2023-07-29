@@ -7,7 +7,7 @@ def authentication_function():
         creds_dict = json.loads(request.headers.get('Authorization'))
         print("creds_dict:",creds_dict)
     except:
-        return ({"error": True, "response":"bad auth credentials"})
+        return ({"error": True, "response":"bad/no auth credentials"})
     try:
         user_details = User.query.filter_by(email=creds_dict["email"]).first()
     except:

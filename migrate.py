@@ -10,7 +10,7 @@ if (cfg["APP_ENVIRONMENT"] == "DEVELOPMENT"):
     datasets_folder_location = "datasets/"
     csv_filenames=["provinces","districts","sectors",
                 "cells","villages","health_centers",
-                "patients","blood_tests","malaria_results","users"
+                "patients","blood_tests","malaria_results","users","case_caches"
                 ]
     for i in csv_filenames:
         df = pd.read_csv(datasets_folder_location + i +".csv")
