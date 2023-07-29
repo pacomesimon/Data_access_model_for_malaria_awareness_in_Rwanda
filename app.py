@@ -24,6 +24,46 @@ def table_retrival(table_name):
         return jsonify(table_querying(table_name=table_name,
                         columns_to_drop=[],
                         ).to_dict("index")), 200
+    
+
+@app.route("/tables/<table_name>/sampling", methods=['GET'])
+def online_querying_api(table_name):
+
+    auth_results = authentication_function()
+    if(auth_results["error"]):
+        return jsonify(auth_results), 400
+    user_details = auth_results["response"]
+
+    if (table_name in ["patient","case_cache","malaria_results",
+                       "blood_test","health_center", 
+                       "village","sector","cell",
+                      "district","province"]):
+
+        # Check if the content type is JSON
+        if request.content_type == 'application/json':
+            try:
+                # Access the JSON data from the request body
+                json_data = request.get_json()
+
+                results = online_querying(
+                    table_name=table_name,
+                    batch_size=json_data["batch_size"],
+                    previous_indexes=json_data["previous_indexes"],
+                    columns_to_drop=["name"]
+                        )
+                if (results["status"]==200):
+                    results["data"]= results["data"].to_dict("index")
+                return jsonify(results), results["status"]
+            
+            except Exception as e:
+                # If there is an error parsing the JSON data, return an error response
+                return jsonify({'error': f'Invalid JSON data {e}'}), 400
+        
+        # If the content type is not JSON, return an error response
+        return jsonify({'error': 'Invalid content type. Expected JSON data.'}), 400
+
+    else:
+        return jsonify({"response":"table not found"}), 404
 
 
 @app.route("/tables/<table_name>/add", methods=['POST'])

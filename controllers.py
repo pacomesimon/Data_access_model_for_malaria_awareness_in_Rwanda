@@ -1,5 +1,6 @@
 from db_models import * 
 import pandas as pd
+import numpy as np
 
 def table_querying(table_name="case_cache",
                         columns_to_drop=["name"],
@@ -148,3 +149,52 @@ def delete_resource(resource_table_name,id):
     db.session.delete(resource)
     db.session.commit()
 
+def count_table_size(table_name):
+    global table_size_dict
+    response = db.engine.execute(
+        f"""
+        select count(id) 
+        from {table_name}
+        """
+    )
+    for i in response:
+        return i[0]
+
+def online_querying(table_name="patient",batch_size=1000,
+                    previous_indexes=[],
+                    columns_to_drop=["name"]
+                        ):
+    table_size = count_table_size(table_name)
+    if table_size <= len(previous_indexes):
+        return {"response": "provided indexes list is longer than the table",
+                "status" : 400}
+
+    last_id = table_last_id(table_name)
+    possible_indexes= list(set(range(last_id)) - set(previous_indexes))
+    indexes = np.random.choice(possible_indexes, size=len(possible_indexes), replace=False)
+    
+    if((batch_size)>=len(indexes)):
+        indexes_sql_str = " or id=".join([str(i) for i in indexes])
+    else:
+        indexes_sql_str = " or id=".join([str(i) for i in indexes[:batch_size+1]])
+    response = db.engine.execute(
+        f"""
+        select * 
+        from {table_name}
+        where id={indexes_sql_str}
+        """
+    )
+    
+    response_df=pd.DataFrame([i for i in response])
+    columns_to_drop = list(set(response_df.columns) & set(columns_to_drop))
+    response_df=response_df.drop(columns=columns_to_drop)
+
+    return {"data": response_df,
+            "original_table_length": table_size,
+            "number_of_samples" : len(response_df),
+            "returned_indexes": response_df["id"].tolist(),
+            "status": 200
+            }
+        
+            
+        
