@@ -36,15 +36,15 @@ def table_retrival(table_name):
                         ).to_dict("index")), 200
     
 
-@app.route("/tables/<table_name>", methods=['GET'])
-def table_retrival_timeslicing(table_name):
+@app.route("/tables/<table_name>/timefilter", methods=['GET'])
+def table_retrival_timefilter(table_name):
 
     auth_results = authentication_function()
     if(auth_results["error"]):
         return jsonify(auth_results), 400
     user_details = auth_results["response"]
 
-    if (table_name not in ["patient","case_cache","malaria_results"]):
+    if (table_name not in ["case_cache","blood_test"]):
         return jsonify({"error":"table cannot be found on this endpoint"}), 404
     
     if (user_details.role not in ["health_worker","sys_admin"]):
