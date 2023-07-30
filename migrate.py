@@ -19,3 +19,6 @@ if (cfg["APP_ENVIRONMENT"] == "DEVELOPMENT"):
             df.to_sql(con=db.engine, name=i, if_exists='append', index=False)
         else:
             df.to_sql(con=db.engine, name=i[:-1], if_exists='append', index=False)
+
+if (cfg["APP_ENVIRONMENT"] == "PRODUCTION"):
+    db.create_all()

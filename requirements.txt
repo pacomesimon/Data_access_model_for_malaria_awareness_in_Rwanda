@@ -1,0 +1,5 @@
+Flask==2.0.2
+Flask_SQLAlchemy==2.5.1
+numpy==1.23.2
+pandas==1.4.4
+python-dotenv==1.0.0
