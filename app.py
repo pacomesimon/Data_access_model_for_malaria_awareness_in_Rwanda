@@ -136,7 +136,7 @@ def entry_retrival(table_name,column_name,key):
                         ).to_dict("index")), 200
 
 
-@app.route("/tables/<table_name>/add", methods=['POST'])
+@app.route("/tables/<table_name>/create", methods=['POST'])
 def create_resource_endpoint(table_name):
     
     auth_results = authentication_function()
@@ -160,7 +160,7 @@ def create_resource_endpoint(table_name):
         
         except Exception as e:
             # If there is an error parsing the JSON data, return an error response
-            return jsonify({'error': 'Invalid JSON data'}), 400
+            return jsonify({'error': f'Invalid JSON data, {e}'}), 400
     
     # If the content type is not JSON, return an error response
     return jsonify({'error': 'Invalid content type. Expected JSON data.'}), 400
@@ -188,7 +188,7 @@ def update_resource_endpoint(table_name,id):
         
         except Exception as e:
             # If there is an error parsing the JSON data, return an error response
-            return jsonify({'error': 'Invalid JSON data'}), 400
+            return jsonify({'error': f'Invalid JSON data, {e}'}), 400
     
     # If the content type is not JSON, return an error response
     return jsonify({'error': 'Invalid content type. Expected JSON data.'}), 400
@@ -203,9 +203,13 @@ def delete_resource_endpoint(table_name,id):
 
     if (user_details.role not in ["sys_admin"]):
         return jsonify({"response":"unauthorized"}), 404
-    delete_resource(resource_table_name=table_name,
+    try:
+        delete_resource(resource_table_name=table_name,
                             id=id,)
-
+    except Exception as e:
+        # If there is an error in deletion process, return an error response
+        return jsonify({'error': f'error in deletion process: {e}'}), 400
+    
     return jsonify({"response":"resource deleted"}), 200
 
 if __name__ == '__main__':

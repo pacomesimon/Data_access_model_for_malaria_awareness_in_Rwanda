@@ -1,7 +1,8 @@
-from db_models import * 
+import db_models
 import pandas as pd
 import numpy as np
 import db_helpers
+import datetime
 
 def table_querying(table_name="case_cache",
                         columns_to_drop=["name"],
@@ -78,74 +79,39 @@ def online_querying(table_name="patient",batch_size=1000,
 def create_resource(resource_table_name,details_dict):
     new_id = db_helpers.table_last_id(resource_table_name) + 1
     details_dict.update({"id":new_id})
-    if resource_table_name=="patient":
-        new_resource = Patient(**details_dict)
-    elif resource_table_name=="health_center":
-        new_resource = Health_center(**details_dict)
-    elif resource_table_name=="blood_test":
-        new_resource = Blood_test(**details_dict)
-    elif resource_table_name=="malaria_results":
-        new_resource = Malaria_results(**details_dict)
-        db.session.add(new_resource)
-        db.session.commit()
-        patient_id = Blood_test.query.filter_by(id=details_dict["id"]).first().patient_id
-        current_patient =Patient.query.filter_by(id=patient_id).first()
-        case_cache_dict = {
-            "id": details_dict["id"],
-            "date": details_dict["date"],
-            "patient_id": patient_id,
-            "Name": current_patient.name,
-            "date_of_birth": current_patient.date_of_birth,
-            "gender": current_patient.gender,
-            "village_id": current_patient.village_id,
-            "malaria_status": details_dict["malaria_status"],
-            "parasite_type": details_dict["parasite_type"],
-            "blood_test_id": details_dict["id"],
-        }
-        new_resource = Case_cache(**case_cache_dict)   
-    elif resource_table_name=="case_cache":
-        new_resource = Case_cache(**details_dict)  
-    else:
-        return "Resource's table not found"
+
+    db_model = getattr(db_models,str.capitalize(resource_table_name))
     
-    db.session.add(new_resource)
-    db.session.commit()
+    if resource_table_name=="malaria_results":
+        new_resource = db_model(**details_dict)
+        db_models.db.session.add(new_resource)
+        db_models.db.session.commit()
+
+        patient_id = db_models.Blood_test.query.filter_by(id=details_dict["blood_test_id"]).first().patient_id
+        current_patient = db_helpers.table_column_filter(key=patient_id,table_name="patient",key_column="id")
+        current_patient_dict = pd.DataFrame(current_patient).to_dict('records')[0] 
+        current_patient_dict["patient_id"] = current_patient_dict.pop('id')
+        case_cache_dict = details_dict.copy()
+        case_cache_dict.update({"date":datetime.datetime.now()})
+        case_cache_dict.update(current_patient_dict)
+        new_resource = db_models.Case_cache(**case_cache_dict)
+    else:
+        new_resource = db_model(**details_dict)
+
+    db_models.db.session.add(new_resource)
+    db_models.db.session.commit()
 
 def update_resource(resource_table_name,id,details_dict):
-    if resource_table_name=="patient":
-        resource = Patient.query.filter_by(id=id).first()
-    elif resource_table_name=="health_center":
-        resource = Health_center.query.filter_by(id=id).first()
-    elif resource_table_name=="blood_test":
-        resource = Blood_test.query.filter_by(id=id).first()
-    elif resource_table_name=="malaria_results":
-        resource = Malaria_results.query.filter_by(id=id).first()
-        [setattr(resource,attr,val) for attr,val in details_dict.items()]
-        resource = Case_cache.query.filter_by(id=id).first()
-    elif resource_table_name=="case_cache":
-        resource = Case_cache.query.filter_by(id=id).first()
-    else:
-        return "Resource's table not found"
-    
+    db_model = getattr(db_models,str.capitalize(resource_table_name))
+    resource = db_model.query.filter_by(id=id).first()
     [setattr(resource,attr,val) for attr,val in details_dict.items()]
-    db.session.commit()
+    db_models.db.session.commit()
 
 def delete_resource(resource_table_name,id):
-    if resource_table_name=="patient":
-        resource = Patient.query.filter_by(id=id).first()
-    elif resource_table_name=="health_center":
-        resource = Health_center.query.filter_by(id=id).first()
-    elif resource_table_name=="blood_test":
-        resource = Blood_test.query.filter_by(id=id).first()
-    elif resource_table_name=="malaria_results":
-        resource = Malaria_results.query.filter_by(id=id).first()
-    elif resource_table_name=="case_cache":
-        resource = Case_cache.query.filter_by(id=id).first()
-    else:
-        return "Resource's table not found"
-    
-    db.session.delete(resource)
-    db.session.commit()
+    db_model = getattr(db_models,str.capitalize(resource_table_name))
+    resource = db_model.query.filter_by(id=id).first()
+    db_models.db.session.delete(resource)
+    db_models.db.session.commit()
 
 
         
