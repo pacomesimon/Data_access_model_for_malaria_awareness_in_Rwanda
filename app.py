@@ -96,7 +96,7 @@ def online_querying_api(table_name):
         try:
             # Access the JSON data from the request body
             json_data = request.get_json()
-
+    
             results = online_querying(
                 table_name=table_name,
                 batch_size=json_data["batch_size"],
