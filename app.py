@@ -3,7 +3,7 @@ from controllers import *
 from config import cfg
 from db_models import *
 from authentication import authentication_function
-
+import request_log
 
 @app.route("/", methods=['GET'])
 def hello_world():
@@ -20,6 +20,7 @@ def table_retrival(table_name):
     if(auth_results["error"]):
         return jsonify(auth_results), 400
     user_details = auth_results["response"]
+    user_details_dict = vars(user_details).copy()
 
     if (table_name not in ["patient","case_cache","malaria_results",
                        "blood_test","health_center", 
@@ -31,6 +32,7 @@ def table_retrival(table_name):
         columns_to_drop=["name"]
     else:
         columns_to_drop=[]
+    request_log.log(user_details_dict,request,columns_to_drop)
     return jsonify(table_querying(table_name=table_name,
                         columns_to_drop=columns_to_drop,
                         ).to_dict("index")), 200
@@ -43,6 +45,7 @@ def table_retrival_timefilter(table_name):
     if(auth_results["error"]):
         return jsonify(auth_results), 400
     user_details = auth_results["response"]
+    user_details_dict = vars(user_details).copy()
 
     if (table_name not in ["case_cache","blood_test"]):
         return jsonify({"error":"table cannot be found on this endpoint"}), 404
@@ -57,6 +60,7 @@ def table_retrival_timefilter(table_name):
             # Access the JSON data from the request body
             json_data = request.get_json()
 
+            request_log.log(user_details_dict,request,columns_to_drop)
             return jsonify(table_querying_with_datetime_filters(
                 early_date=json_data["early_date"],
                 late_date=json_data["late_date"],
@@ -79,6 +83,7 @@ def online_querying_api(table_name):
     if(auth_results["error"]):
         return jsonify(auth_results), 400
     user_details = auth_results["response"]
+    user_details_dict = vars(user_details).copy()
 
     if (table_name not in ["patient","case_cache","malaria_results",
                        "blood_test","health_center", 
@@ -105,6 +110,7 @@ def online_querying_api(table_name):
                     )
             if (results["status"]==200):
                 results["data"]= results["data"].to_dict("index")
+            request_log.log(user_details_dict,request,columns_to_drop)
             return jsonify(results), results["status"]
         
         except Exception as e:
@@ -121,6 +127,7 @@ def entry_retrival(table_name,column_name,key):
     if(auth_results["error"]):
         return jsonify(auth_results), 400
     user_details = auth_results["response"]
+    user_details_dict = vars(user_details).copy()
 
     if (user_details.role not in ["health_worker","sys_admin"]):
         return jsonify({"response":"unauthorized"}), 401
@@ -130,6 +137,8 @@ def entry_retrival(table_name,column_name,key):
                        "village","sector","cell",
                       "district","province"]):
         return jsonify({"error":"table not found"}), 404
+    
+    request_log.log(user_details_dict,request,[])
     
     return jsonify(entries_querying(key=key,table_name=table_name,
                         key_column=column_name,
@@ -143,6 +152,7 @@ def create_resource_endpoint(table_name):
     if(auth_results["error"]):
         return jsonify(auth_results), 400
     user_details = auth_results["response"]
+    user_details_dict = vars(user_details).copy()
 
     if (user_details.role not in ["health_worker","sys_admin"]):
         return jsonify({"response":"unauthorized"}), 401
@@ -155,6 +165,8 @@ def create_resource_endpoint(table_name):
             json_data = request.get_json()
             create_resource(resource_table_name=table_name,
                             details_dict = json_data)
+            
+            request_log.log(user_details_dict,request,[])
 
             return jsonify({"response":"resource created"}), 201
         
@@ -172,9 +184,10 @@ def update_resource_endpoint(table_name,id):
     if(auth_results["error"]):
         return jsonify(auth_results), 400
     user_details = auth_results["response"]
+    user_details_dict = vars(user_details).copy()
 
     if (user_details.role not in ["sys_admin"]):
-        return jsonify({"response":"unauthorized"}), 404
+        return jsonify({"response":"unauthorized"}), 401
 # Check if the content type is JSON
     if request.content_type == 'application/json':
         try:
@@ -183,6 +196,8 @@ def update_resource_endpoint(table_name,id):
             update_resource(resource_table_name=table_name,
                             id=id,
                             details_dict = json_data)
+            
+            request_log.log(user_details_dict,request,[])
 
             return jsonify({"response":"resource updated"}), 201
         
@@ -200,9 +215,10 @@ def delete_resource_endpoint(table_name,id):
     if(auth_results["error"]):
         return jsonify(auth_results), 400
     user_details = auth_results["response"]
+    user_details_dict = vars(user_details).copy()
 
     if (user_details.role not in ["sys_admin"]):
-        return jsonify({"response":"unauthorized"}), 404
+        return jsonify({"response":"unauthorized"}), 401
     try:
         delete_resource(resource_table_name=table_name,
                             id=id,)
@@ -210,6 +226,8 @@ def delete_resource_endpoint(table_name,id):
         # If there is an error in deletion process, return an error response
         return jsonify({'error': f'error in deletion process: {e}'}), 400
     
+    request_log.log(user_details_dict ,request,[])
+
     return jsonify({"response":"resource deleted"}), 200
 
 if __name__ == '__main__':

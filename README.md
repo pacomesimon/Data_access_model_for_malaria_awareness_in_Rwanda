@@ -14,6 +14,7 @@ DB_PASSWORD_DEV = *****         # your database password
 DB_HOST_DEV = "localhost"       # or your database domain name
 DB_PORT_DEV = "5432"            # or your database port
 DB_NAME_DEV = "malaria_db"      # or any other existing database
+REQUEST_LOGS_PATH_DEV= "./requests_logs/"     # path to the logs' folder
 
 SERVER_PORT_DEV = 3000          # server/API port
 
@@ -24,6 +25,7 @@ DB_PASSWORD_PROD = *****         # your database password
 DB_HOST_PROD = "localhost"       # or your database domain name
 DB_PORT_PROD = "5432"            # or your database port
 DB_NAME_PROD = "malaria_db"      # or any other existing database
+REQUEST_LOGS_PATH_PROD = "./requests_logs/"     # path to the logs' folder
 
 SERVER_PORT_PROD = 3000          # server/API port
 

@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "f58bb84f-3110-4add-a599-7ea7a60f6393",
 		"name": "Data_access_model_for_malaria_awareness_in_Rwanda",
-		"description": "**Introduction**\n\nThis is an API created to demonstrate a Data Access Model for Malaria Awareness in Rwanda.\n\n**Overview of the endpoints:**Generally, the endpoints' URLs are defined using this pattern, where the values enclosed in {{}} are variables: (This example is for a URL that retrieves particular entries that have the same value in a column of a certain table)\n\n`http://{{ domain_name}}:{{ port}}/tables/{{ table_name}}/{{ column_name}}/{{ key}}`\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n| column_name | **health_center_id** (can also be any column name present in the database table) |\n| key | 90 (can also be any other value present in the table's column) |\n\nEach endpoint has it's own corresponding URL whose parts (variables) will be defined, considering what it's meant to serve.\n\n**Authorization & authentication:**\n\nExcluding the root endpoint (`http://{{ domain_name}}:{{ port}}/`), other endpoints need authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request.",
+		"description": "**Introduction**\n\nThis is an API created to demonstrate a Data Access Model for Malaria Awareness in Rwanda.\n\n**Overview of the endpoints:** Generally, the endpoints' URLs are defined using this pattern, where the values enclosed in {{}} are variables: (This example is for a URL that retrieves particular entries that have the same value in a column of a certain table. You will need to declare those variables in the global scope, in POSTMAN. [Read this for more information on POSTMAN variables]())\n\n`http://{{domain_name}}:{{port}}/tables/{{table_name}}/{{column_name}}/{{key}}`\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n| column_name | **health_center_id** (can also be any column name present in the database table) |\n| key | 90 (can also be any other value present in the table's column) |\n\nEach endpoint has it's own corresponding URL whose parts (variables) will be defined, considering what it's meant to serve.\n\n**Authorization & authentication:**\n\nExcluding the root endpoint (`http://{{domain_name}}:{{port}}/`), other endpoints need authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21729470"
 	},
@@ -64,12 +64,12 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3000/",
+							"raw": "http://{{domain_name}}:{{port}}/",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{domain_name}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								""
 							],
@@ -138,7 +138,7 @@
 						}
 					]
 				},
-				"description": "This endpoint retrieves the whole table.\n\nThe URL follows this structure:\n\n`http://{{ domain_name}}:{{ port}}/tables/{{ table_name}}`\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n\nAuthentication is needed for access, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
+				"description": "This endpoint retrieves the whole table.\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n\nAuthentication is needed for access, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
 			},
 			"response": [
 				{
@@ -153,15 +153,15 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3000/tables/patient",
+							"raw": "http://{{domain_name}}:{{port}}/tables/{{table_name}}",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{domain_name}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"tables",
-								"patient"
+								"{{table_name}}"
 							],
 							"query": [
 								{
@@ -214,7 +214,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"batch_size\": 5,\r\n    \"previous_indexes\": []\r\n}",
+					"raw": "{\r\n    \"batch_size\": 5,\r\n    \"previous_indexes\": [1,2,3]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -241,7 +241,7 @@
 						}
 					]
 				},
-				"description": "Returns random samples from the table with a number equal to the \"batch_size\". It excludes those in \"previous_indexes\" (see the `Body` of the request example shown here below).\n\nThe URL follows this structure:\n\n`http://{{ domain_name}}:{{ port}}/tables/{{ table_name}}/sampling`\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n\nAuthentication is needed for access, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
+				"description": "Returns random samples from the table with a number equal to the \"batch_size\". It excludes those in \"previous_indexes\" (see the `Body` of the request example shown here below).\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n\nAuthentication is needed for access, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
 			},
 			"response": [
 				{
@@ -265,15 +265,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/tables/patient/sampling",
+							"raw": "http://{{domain_name}}:{{port}}/tables/{{table_name}}/sampling",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{domain_name}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"tables",
-								"patient",
+								"{{table_name}}",
 								"sampling"
 							],
 							"query": [
@@ -354,7 +354,7 @@
 						}
 					]
 				},
-				"description": "Returns entries whose values in \"date\" column are in the specified range (see the `Body` of the request example shown here below).\n\nThe URL follows this structure:\n\n`http://{{ domain_name}}:{{ port}}/tables/{{ table_name}}/timefilter`\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **case_cache** (or **blood_test**) |\n\nAuthentication is needed for access, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
+				"description": "Returns entries whose values in \"date\" column are in the specified range (see the `Body` of the request example shown here below).\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **case_cache** (or **blood_test**) |\n\nAuthentication is needed for access, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
 			},
 			"response": [
 				{
@@ -378,15 +378,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/tables/patient/timefilter",
+							"raw": "http://{{domain_name}}:{{port}}/tables/{{table_name}}/timefilter",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{domain_name}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"tables",
-								"patient",
+								"{{table_name}}",
 								"timefilter"
 							],
 							"query": [
@@ -468,7 +468,7 @@
 						}
 					]
 				},
-				"description": "This retrieves particular entries that have the same value in a column of a certain table.\n\n`http://{{ domain_name}}:{{ port}}/tables/{{ table_name}}/{{ column_name}}/{{ key}}`\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n| column_name | **health_center_id** (can also be any column name present in the database table) |\n| key | 90 (can also be any other value present in the table's column) |\n\nAccess to this endpoint needs authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
+				"description": "This retrieves particular entries that have the same value in a column of a certain table.\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n| column_name | **health_center_id** (can also be any column name present in the database table) |\n| key | 90 (can also be any other value present in the table's column) |\n\nAccess to this endpoint needs authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
 			},
 			"response": [
 				{
@@ -492,17 +492,17 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/tables/patient/health_center_id/90",
+							"raw": "http://{{domain_name}}:{{port}}/tables/{{table_name}}/{{column_name}}/{{key}}",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{domain_name}}"
 							],
-							"port": "3000",
+							"port": "{{port}}",
 							"path": [
 								"tables",
-								"patient",
-								"health_center_id",
-								"90"
+								"{{table_name}}",
+								"{{column_name}}",
+								"{{key}}"
 							],
 							"query": [
 								{
@@ -540,7 +540,7 @@
 			]
 		},
 		{
-			"name": "add_resource",
+			"name": "create_resource",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -552,7 +552,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\" : \"FROMPM\",\r\n    \"date_of_birth\" : \"1950-11-21\",\r\n    \"gender\" :\"male\",\r\n    \"village_id\" : 52120101,\r\n    \"health_center_id\" : 905\r\n}",
+					"raw": "{\r\n    \"date_of_birth\": \"Tue, 01 Aug 2017 19:53:20 GMT\",\r\n        \"gender\": \"male\",\r\n        \"health_center_id\": 264,\r\n        \"name\": \"OJMRJGGUNZ\",\r\n        \"village_id\": 34110108\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -560,7 +560,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{domain_name}}:{{port}}/tables/{{table_name}}/add",
+					"raw": "http://{{domain_name}}:{{port}}/tables/{{table_name}}/create",
 					"protocol": "http",
 					"host": [
 						"{{domain_name}}"
@@ -569,10 +569,10 @@
 					"path": [
 						"tables",
 						"{{table_name}}",
-						"add"
+						"create"
 					]
 				},
-				"description": "This endpoint is for inserting a new entry in a database's table.\n\nThe URL follows this pattern:\n\n`http://{{ domain_name}}:{{ port}}/tables/{{ table_name}}/add`\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n\nAccess to this endpoint needs authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
+				"description": "This endpoint is for inserting a new entry in a database's table.\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n\nAccess to this endpoint needs authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
 			},
 			"response": [
 				{
@@ -669,7 +669,7 @@
 						"{{id}}"
 					]
 				},
-				"description": "This endpoint is for updating an entry in a database's table.\n\nThe URL follows this pattern:\n\n`http://{{ domain_name}}:{{ port}}/tables/{{ table_name}}/update/{{ id}}`\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n| id | a primary key to identify a particular entry. |\n\nAccess to this endpoint needs authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
+				"description": "This endpoint is for updating an entry in a database's table.\n\nThe URL follows this pattern:\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n| id | a primary key to identify a particular entry. |\n\nAccess to this endpoint needs authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
 			},
 			"response": [
 				{
@@ -767,7 +767,7 @@
 						"{{id}}"
 					]
 				},
-				"description": "This endpoint is for updating an entry in a database's table.\n\nThe URL follows this pattern:\n\n`http://{{ domain_name}}:{{ port}}/tables/{{ table_name}}/update/{{ id}}`\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n| id | a primary key to identify a particular entry. |\n\nAccess to this endpoint needs authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
+				"description": "This endpoint is for updating an entry in a database's table.\n\nThe table below shows examples of values each variable can take:\n\n| Variable | Value |\n| --- | --- |\n| domain_name | localhost |\n| port | 3000 |\n| table_name | **patient** (can also be any table name present in the database) |\n| id | a primary key to identify a particular entry. |\n\nAccess to this endpoint needs authentication, which is done through inputing the `Authorization` header with credentials as its value (such as `{\"email\":\"`[<code>1000@gmail.com</code>]()`\",\"password\":\"qwert2000\"}`) in the request."
 			},
 			"response": [
 				{
@@ -850,34 +850,6 @@
 					""
 				]
 			}
-		}
-	],
-	"variable": [
-		{
-			"key": "domain_name",
-			"value": "localhost"
-		},
-		{
-			"key": "port",
-			"value": "3000"
-		},
-		{
-			"key": "table_name",
-			"value": "patient"
-		},
-		{
-			"key": "column_name",
-			"value": "health_center_id",
-			"type": "string"
-		},
-		{
-			"key": "key",
-			"value": "90",
-			"type": "string"
-		},
-		{
-			"key": "id",
-			"value": "10000"
 		}
 	]
 }

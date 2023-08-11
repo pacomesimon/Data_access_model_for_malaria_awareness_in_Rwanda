@@ -12,6 +12,7 @@ if (os.environ["APP_ENVIRONMENT"]=="DEVELOPMENT"):
         "DB_PORT" : os.environ["DB_PORT_DEV"],
         "DB_NAME" : os.environ["DB_NAME_DEV"],
         "SERVER_PORT": os.environ["SERVER_PORT_DEV"],
+        "REQUEST_LOGS_PATH" : os.environ["REQUEST_LOGS_PATH_DEV"],
     }
 
 if (os.environ["APP_ENVIRONMENT"]=="PRODUCTION"):
@@ -24,4 +25,5 @@ if (os.environ["APP_ENVIRONMENT"]=="PRODUCTION"):
         "DB_PORT" : os.environ["DB_PORT_PROD"],
         "DB_NAME" : os.environ["DB_NAME_PROD"],
         "SERVER_PORT": os.environ["SERVER_PORT_PROD"],
+        "REQUEST_LOGS_PATH" : os.environ["REQUEST_LOGS_PATH_PROD"],
     }
