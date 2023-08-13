@@ -31,7 +31,7 @@ def replace_non_numbers_with_underscore(input_string):
 
     return output_string
 
-def log(user_details_dict,request,columns_to_drop):
+def log(user_details_dict, request, columns_to_drop):
     """
     Log user activity and request details into a JSON file.
 
@@ -43,19 +43,27 @@ def log(user_details_dict,request,columns_to_drop):
     Returns:
         None
     """
+    # Remove unnecessary attribute from user_details_dict
     user_details_dict.pop('_sa_instance_state')
-    request_dictionary=vars(request).copy()
-    request_dictionary = {key:str(val) for (key,val) in request_dictionary.items()}
-    timestamp=str(datetime.datetime.now())
-    json_log_data = json.dumps(([
-                    {"timestamp":timestamp},
-                    {"user_details":user_details_dict},
-                    {"request":request_dictionary},
-                    {"columns_to_drop":columns_to_drop}
-                ])
-                , indent = 8) 
 
-    # Writing to a json file
+    # Convert request object attributes to a dictionary of strings
+    request_dictionary = vars(request).copy()
+    request_dictionary = {key: str(val) for key, val in request_dictionary.items()}
+
+    # Get the current timestamp
+    timestamp = str(datetime.datetime.now())
+
+    # Create a JSON structure with timestamp, user details, request, and columns to drop
+    json_log_data = json.dumps([
+        {"timestamp": timestamp},
+        {"user_details": user_details_dict},
+        {"request": request_dictionary},
+        {"columns_to_drop": columns_to_drop}
+    ], indent=8)
+
+    # Specify the path for the JSON log file
     json_file_path = f"{REQUEST_LOGS_PATH}{replace_non_numbers_with_underscore(timestamp)}{'.json'}"
+
+    # Write the JSON log data to the specified file
     with open(json_file_path, "a+") as outfile:
         outfile.write(json_log_data)

@@ -74,7 +74,7 @@ class Patient(db.Model):
 class Blood_test(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime)
-    image = db.Column(db.Integer)
+    image_url = db.Column(db.String(20000))
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
     malaria_results = db.relationship('Malaria_results', backref='blood_test')
 
