@@ -140,7 +140,7 @@ def online_querying(table_name="patient", batch_size=1000,
     last_id = db_helpers.table_last_id(table_name)
     
     # Generate a list of possible indexes based on previously queried indexes
-    possible_indexes = list(set(range(last_id)) - set(previous_indexes))
+    possible_indexes = list(set(range(last_id+1)) - set(previous_indexes))
     
     # Randomly sample indexes based on batch size and available possible indexes
     indexes = np.random.choice(possible_indexes, size=len(possible_indexes), replace=False)
@@ -149,7 +149,7 @@ def online_querying(table_name="patient", batch_size=1000,
     if (batch_size >= len(indexes)):
         indexes_sql_str = " or id=".join([str(i) for i in indexes])
     else:
-        indexes_sql_str = " or id=".join([str(i) for i in indexes[:batch_size + 1]])
+        indexes_sql_str = " or id=".join([str(i) for i in indexes[:batch_size]])
     
     # Query the specified table with index filtering using db_helpers.table_column_filter function
     response = db_helpers.table_column_filter(key=indexes_sql_str,

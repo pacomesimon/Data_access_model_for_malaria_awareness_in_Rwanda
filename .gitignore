@@ -10,6 +10,7 @@ __pycache__
 
 # draft files and folders
 draft.ipynb
+demo/.*
 
 # logs folder
 requests_logs
