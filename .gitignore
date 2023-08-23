@@ -12,5 +12,5 @@ __pycache__
 draft.ipynb
 demo/.*
 
-# logs folder
-requests_logs
+# logs folder (you can comment / uncomment it on your purpose)
+# requests_logs
